@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-world-job
+spec:
+  template:
+    metadata:
+      name: hello-world-job
+    spec:
+      containers:
+      - name: hello-world
+        image: siloux/test_job_process:latest
+        # command:
+        #  - "bin/bash"
+        #  - "-c"
+        #  - "ls" # hello_world.txt
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: "1"
+          requests:
+            memory: 1Gi
+            cpu: "1"
+      restartPolicy: Never
