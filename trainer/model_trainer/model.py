@@ -1,0 +1,105 @@
+import os
+
+import torch
+import timm
+from torch import nn
+from torch.optim import Adam
+from torchvision.io import read_image
+from torch.utils.data import Dataset, DataLoader
+
+class Trainer():
+    def __init__(self, conf, data):
+        self.conf, self.data = conf, data
+        self.dataloader = None
+        self.model = None
+
+    def build(self):
+        dataset = DeepFishDataset(self.data, self.conf["data_path"])
+        self.dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
+        self.model = Model(self.conf).cuda()
+
+    def train(self):
+        # https://machinelearningmastery.com/creating-a-training-loop-for-pytorch-models/
+        # Code used as template
+       
+        loss_fn = self.model.loss()
+        optimizer = self.model.optimizer()
+        loss_sum = 0
+        count = 0
+        self.model.train()
+        for (input, label) in self.dataloader:
+                
+                
+                count += 1
+
+                optimizer.zero_grad()
+               
+                pred = self.model(input.cuda())
+                
+                #print(pred, label)
+                loss = loss_fn(pred, label.cuda())
+                loss.backward()
+                optimizer.step()
+
+                loss_sum += loss.item()#.cpu()
+                
+        adv_loss = loss_sum/count
+        #print(adv_loss)
+        self.model.save()
+        return adv_loss
+
+class DeepFishDataset(Dataset):
+    def __init__(self, data, data_path):
+        super()
+        self.data = data
+        self.data_path = data_path
+        #TODO: pull data from file_path into local container
+        #Take advantage of potential parrellism
+
+    def __len__(self):    
+        return len(self.data)
+
+    def __getitem__(self, index):
+        data = self.data[index]
+        file_path = os.path.join(self.data_path, data["file_path"])
+        label = torch.Tensor([data["label"]])
+        #print(label, data["label"], type(data["label"]))
+        image = read_image(file_path).float()
+        
+        return image, label
+
+class Model(nn.Module):
+    def __init__(self, cfg):
+        super(Model, self).__init__()
+        self.cfg = cfg
+
+        self.model = timm.create_model(
+            cfg["model_name"],
+            pretrained=(not os.path.exists(cfg["model_checkpoint"])),
+            num_classes=1,
+        )
+
+        self.checkpoint = None
+        self.optimizer_obj = None
+        if cfg["model_checkpoint"] != "" and os.path.exists(cfg["model_checkpoint"]):
+            self.checkpoint = torch.load(cfg["model_checkpoint"])
+            self.model.load_state_dict(self.checkpoint['model_state_dict'])
+
+    def forward(self, images):
+        return self.model(images)
+
+    def save(self):
+       torch.save({
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer_obj.state_dict(),
+            }, self.cfg["model_checkpoint"])
+
+    def optimizer(self):
+        optimizer = Adam(self.model.parameters(), lr=self.cfg["learning_rate"])
+        if self.checkpoint is not None:
+            optimizer.load_state_dict(self.checkpoint['optimizer_state_dict'])
+        self.optimizer_obj = optimizer
+        return optimizer
+
+    def loss(self):
+        return nn.BCEWithLogitsLoss(reduction='mean')
