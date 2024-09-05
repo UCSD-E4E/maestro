@@ -10,6 +10,7 @@ python = "^3.9"
 kubernetes = "^30.1.0"
 python-socketio = "^5.11.3"
 eventlet = "^0.36.1"
+pyyaml = "^6.0.2"
 
 
 [build-system]
