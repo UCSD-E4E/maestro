@@ -2,6 +2,9 @@ import os
 from kubernetes import client, config, utils
 import eventlet
 import socketio
+from os import path
+import yaml
+
 
 
 ## DEBUG   
@@ -14,6 +17,7 @@ print(dir_list, flush=True)
 
 config.load_incluster_config()
 v1 = client.ApiClient()
+yaml_file = 'scheduler/job.yaml'
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
@@ -43,7 +47,7 @@ def disconnect(sid):
 def spin_up_job(sid):
     yaml_file = 'job.yaml'
     #TODO: Fix permissions to allow for running jobs
-    #utils.create_from_yaml(v1,yaml_file,verbose=True)
+    utils.create_from_yaml(v1,yaml_file,verbose=True)
     
 
 # job is connected and ready to start working
@@ -61,4 +65,18 @@ def clean_up_job(sid, data):
     # print data return and spin down the job
 
 if __name__ == '__main__':
+    # RUN JOB EXAMPLE!
+    with open(yaml_file) as f:
+        job_dict = yaml.safe_load(f)
+        print(job_dict)
+        job_dict["metadata"]["name"] = "model_training-1"
+        job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
+        print(job)
+        print(dir(job))
+        print(job.metadata.name)
+
+
+    #print("run once")
+    #utils.create_from_yaml(v1,yaml_file,verbose=True, namespace="krg-maestro")
+    #print("success!")
     eventlet.wsgi.server(eventlet.listen(('', 3000)), app)

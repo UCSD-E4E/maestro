@@ -1,19 +1,21 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: hello-world-job
+  name: trainer
 spec:
   template:
     metadata:
-      name: hello-world-job
+      name: trainer
+      labels:
+        k8s-app: trainer
     spec:
+      serviceAccountName: maestro
       containers:
-      - name: hello-world
-        image: siloux/test_job_process:latest
-        # command:
-        #  - "bin/bash"
-        #  - "-c"
-        #  - "ls" # hello_world.txt
+      - name: trainer
+        image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
+        volumeMounts:
+          - name: data-pvc
+            mountPath: /data/
         resources:
           limits:
             memory: 1Gi
@@ -22,3 +24,9 @@ spec:
             memory: 1Gi
             cpu: "1"
       restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+      - name: data-pvc
+        persistentVolumeClaim:
+          claimName: data-pvc
