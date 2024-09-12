@@ -69,7 +69,7 @@ if __name__ == '__main__':
     with open(yaml_file) as f:
         job_dict = yaml.safe_load(f)
         print(job_dict)
-        job_dict["metadata"]["name"] = "model_training-1"
+        job_dict["metadata"]["name"] = "model-training-1"
         job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
         print(job)
         print(dir(job))
