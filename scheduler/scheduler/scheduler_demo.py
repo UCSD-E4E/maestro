@@ -47,7 +47,7 @@ def disconnect(sid):
 def spin_up_job(sid):
     yaml_file = 'job.yaml'
     #TODO: Fix permissions to allow for running jobs
-    #utils.create_from_yaml(v1,yaml_file,verbose=True)
+    utils.create_from_yaml(v1,yaml_file,verbose=True)
     
 
 # job is connected and ready to start working

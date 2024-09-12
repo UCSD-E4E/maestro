@@ -53,8 +53,6 @@ class KubeScheduler(Scheduler):
         elif self.admin_sid != sid:
             # One queue per schuduler?
             return 403 
-
-        if 
         
         self.data_send_queue.push(data)
         
