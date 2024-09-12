@@ -65,14 +65,15 @@ def clean_up_job(sid, data):
     # print data return and spin down the job
 
 if __name__ == '__main__':
+    # RUN JOB EXAMPLE!
     with open(yaml_file) as f:
         job_dict = yaml.safe_load(f)
         print(job_dict)
-        job_dict["metadata"]["name"] = "new-name"
+        job_dict["metadata"]["name"] = "model_training-1"
         job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
         print(job)
         print(dir(job))
-        #print(job.metadata.name)
+        print(job.metadata.name)
 
 
     #print("run once")
