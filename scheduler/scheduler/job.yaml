@@ -24,6 +24,11 @@ spec:
             memory: 1Gi
             cpu: "1"
       restartPolicy: Never
+      env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
       imagePullSecrets:
         - name: regcred
       volumes:
