@@ -4,6 +4,7 @@ import eventlet
 import socketio
 from os import path
 import yaml
+import pandas as pd
 
 
 
@@ -17,6 +18,7 @@ print(dir_list, flush=True)
 
 config.load_incluster_config()
 v1 = client.ApiClient()
+batch_v1_api = client.BatchV1Api()
 yaml_file = 'scheduler/job.yaml'
 
 sio = socketio.Server()
@@ -24,8 +26,38 @@ app = socketio.WSGIApp(sio, static_files={
     '/': {'content_type': 'text/html', 'filename': 'index.html'}
 })
 
-## Baseline server stuff I got from examples
+cfg = {
+    "data_path": "/data/Classification",
+    "model_name": "efficientnet_b0",
+    "model_checkpoint": "/data/model.pt",
+    "learning_rate": 0.001
+}
 
+active_jobs = {}
+loss = []
+
+# Set Up The Dataset for Training
+df = pd.read_csv("C:/Users/seanh/Desktop/E4E/maestro/data/DeepFish/Classification/classification.csv")
+df = df.sample(frac = 1)
+df["file"] = df["ID"] + ".jpg"
+# This is going to be used to keep track what has already been shown.
+# In the future this will need to be far more complicated...
+active_idx = 0
+
+def get_next_label():
+    row = df.sample(1)
+    return {
+        "file_path": row["file"],
+        "label": row["labels"]
+    }
+
+def update_labeled_points(idx):
+    pass
+# Writing this, we probably need a custom dataset class to manage this kind of thing...
+
+
+
+## Baseline server stuff I got from examples
 @sio.event
 def connect(sid, environ):
     print('connect ', sid, flush=True)
@@ -47,6 +79,14 @@ def disconnect(sid):
 def spin_up_job(sid):
     yaml_file = 'job.yaml'
     #TODO: Fix permissions to allow for running jobs
+    with open(yaml_file) as f:
+        job_dict = yaml.safe_load(f)
+        print(job_dict)
+        job_dict["metadata"]["name"] = f"model-training-{len(active_jobs)}"
+        job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
+        print(job)
+        print(dir(job))
+        print(job.metadata.name)
     utils.create_from_yaml(v1,yaml_file,verbose=True)
     
 
@@ -54,26 +94,44 @@ def spin_up_job(sid):
 # start the job's actions with data
 @sio.on('job_ready')
 def start_job(sid, data):
+    print("JOB READY", data, flush=True)
+    active_jobs[data["POD_NAME"]] = "running"
     print("JOB IS READY TO START", flush=True)
-    sio.emit('start_job', {'example_input': [0, 1, 2, 3, 4]})
+
+    batch = get_next_label()
+    data = {
+        "batch": batch,
+        "cfg": cfg
+    }
+    sio.emit('start_job', data)
     
 
 @sio.on('job_done')
 def clean_up_job(sid, data):
-    print("random number from job", data["example_output"], sid, flush=True)
+    print("got loss", data["loss"], data["POD_NAME"], active_jobs, sid, flush=True)
+    del active_jobs[data["POD_NAME"]]
+    loss.append(float(data["loss"]))
     # job has returned some data
     # print data return and spin down the job
+    batch_v1_api.delete_namespaced_job(data["POD_NAME"], "krg-maestro")
+    spin_up_job(None)
+
+@sio.on('get_loss')
+def get_loss(sid):
+    sio.emit('sending_loss', {"losses": loss})
 
 if __name__ == '__main__':
-    # RUN JOB EXAMPLE!
-    with open(yaml_file) as f:
-        job_dict = yaml.safe_load(f)
-        print(job_dict)
-        job_dict["metadata"]["name"] = "model-training-1"
-        job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
-        print(job)
-        print(dir(job))
-        print(job.metadata.name)
+
+    spin_up_job(None) 
+    # # RUN JOB EXAMPLE!
+    # with open(yaml_file) as f:
+    #     job_dict = yaml.safe_load(f)
+    #     print(job_dict)
+    #     job_dict["metadata"]["name"] = "model-training-1"
+    #     job = utils.create_from_dict(v1, job_dict,verbose=True, namespace="krg-maestro")[0]
+    #     print(job)
+    #     print(dir(job))
+    #     print(job.metadata.name)
 
 
     #print("run once")
