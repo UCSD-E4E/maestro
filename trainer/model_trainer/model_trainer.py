@@ -1,7 +1,10 @@
 import random
 import socketio
+import os
+from model import Trainer
 
-import time 
+pod_name = os.environ['POD_NAME']
+#import time 
 # while True: 
 #     time.sleep(100)
 #     print("loop")
@@ -12,14 +15,21 @@ sio = socketio.Client()
 @sio.event
 def connect():
     print('connection established', flush=True)
-    sio.emit('job_ready', {'response': 'my response'})
+    sio.emit('job_ready', {'POD_NAME': pod_name})
 
 @sio.on('start_job')
 def trigger_test(data):
-    print(data['example_input'], flush=True)
-    number = random.randrange(0, 100)
-    print("random number", number, flush=True)
-    sio.emit('job_done', {'example_output': number})
+    print(data, flush=True)
+    # Expect batch to be a list of directory of file and label
+    batch = data["batch"]
+    cfg = data["cfg"]
+    trainer = Trainer(cfg, batch)
+    trainer.build()
+    loss = trainer.train()
+
+    # number = random.randrange(0, 100)
+    # print("random number", number, flush=True)
+    sio.emit('job_done', {'loss': loss, "POD_NAME": pod_name})
 
 @sio.event
 def my_message(data):
