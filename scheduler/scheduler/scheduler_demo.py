@@ -5,7 +5,10 @@ import socketio
 from os import path
 import yaml
 import pandas as pd
-
+import time
+ 
+while True:
+    time.sleep(1)
 
 
 ## DEBUG   
