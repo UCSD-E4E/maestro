@@ -37,7 +37,7 @@ active_jobs = {}
 loss = []
 
 # Set Up The Dataset for Training
-df = pd.read_csv("C:/Users/seanh/Desktop/E4E/maestro/data/DeepFish/Classification/classification.csv")
+df = pd.read_csv("/data/Classification/classification.csv")
 df = df.sample(frac = 1)
 df["file"] = df["ID"] + ".jpg"
 # This is going to be used to keep track what has already been shown.
