@@ -6,9 +6,9 @@ from os import path
 import yaml
 import pandas as pd
 import time
- 
-while True:
-    time.sleep(1)
+
+# while True:
+#     time.sleep(1)
 
 
 ## DEBUG   
@@ -30,7 +30,7 @@ app = socketio.WSGIApp(sio, static_files={
 })
 
 cfg = {
-    "data_path": "/data/Classification",
+    "data_path": "/data/",
     "model_name": "efficientnet_b0",
     "model_checkpoint": "/data/model.pt",
     "learning_rate": 0.001
@@ -40,7 +40,7 @@ active_jobs = {}
 loss = []
 
 # Set Up The Dataset for Training
-df = pd.read_csv("/data/Classification/classification.csv")
+df = pd.read_csv("/data/classification.csv")
 df = df.sample(frac = 1)
 df["file"] = df["ID"] + ".jpg"
 # This is going to be used to keep track what has already been shown.
