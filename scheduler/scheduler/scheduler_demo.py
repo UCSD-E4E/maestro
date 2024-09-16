@@ -90,7 +90,6 @@ def spin_up_job(sid):
         print(job)
         print(dir(job))
         print(job.metadata.name)
-    utils.create_from_yaml(v1,yaml_file,verbose=True)
     
 
 # job is connected and ready to start working
