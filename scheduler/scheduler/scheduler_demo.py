@@ -80,7 +80,7 @@ def disconnect(sid):
 # Start processing data
 @sio.on('start_test')
 def spin_up_job(sid):
-    yaml_file = 'job.yaml'
+    yaml_file = 'scheduler/job.yaml'
     #TODO: Fix permissions to allow for running jobs
     with open(yaml_file) as f:
         job_dict = yaml.safe_load(f)
