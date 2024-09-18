@@ -3,8 +3,9 @@ FROM python
 
 WORKDIR /app
 ADD . /app
+RUN ls /app
 
 RUN pip install --upgrade pip poetry
 RUN poetry install
 
-CMD ["poetry", "run", "python", "model_trainer/model_trainer.py"]
+CMD ["poetry", "run", "python", "src/model_trainer.py"]
