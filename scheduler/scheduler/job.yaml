@@ -24,10 +24,10 @@ spec:
         resources:
           limits:
             memory: 10Gi
-            cpu: "1"
+            cpu: "4"
           requests:
             memory: 10Gi
-            cpu: "1"
+            cpu: "4"
       restartPolicy: Never
       imagePullSecrets:
         - name: regcred
