@@ -8,5 +8,5 @@ fi
 
 # Move default installation location in poetry to PVC and run
 poetry config virtualenvs.path /data/model_env
-poetry install
+poetry install --no-root
 poetry run python src/model_trainer.py
