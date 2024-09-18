@@ -13,6 +13,11 @@ spec:
       containers:
       - name: trainer
         image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
+        env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
         volumeMounts:
           - name: data-pvc
             mountPath: /data/
@@ -24,11 +29,6 @@ spec:
             memory: 10Gi
             cpu: "1"
       restartPolicy: Never
-      env:
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
       imagePullSecrets:
         - name: regcred
       volumes:
