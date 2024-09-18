@@ -14,7 +14,7 @@ spec:
       - name: trainer
         image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
         env:
-      - name: POD_NAME
+      - name: POD-NAME
         valueFrom:
           fieldRef:
             fieldPath: metadata.name
