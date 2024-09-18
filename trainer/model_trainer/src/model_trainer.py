@@ -4,7 +4,7 @@ import os
 from model import Trainer
 
 print(os.environ)
-pod_name = os.environ['POD-NAME']
+pod_name = os.environ['pod-name']
 #import time 
 # while True: 
 #     time.sleep(100)
@@ -16,7 +16,7 @@ sio = socketio.Client()
 @sio.event
 def connect():
     print('connection established', flush=True)
-    sio.emit('job_ready', {'POD-NAME': pod_name})
+    sio.emit('job_ready', {'pod-name': pod_name})
 
 @sio.on('start_job')
 def trigger_test(data):
@@ -30,7 +30,7 @@ def trigger_test(data):
 
     # number = random.randrange(0, 100)
     # print("random number", number, flush=True)
-    sio.emit('job_done', {'loss': loss, "POD-NAME": pod_name})
+    sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
 
 @sio.event
 def my_message(data):
