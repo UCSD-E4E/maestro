@@ -18,10 +18,10 @@ spec:
             mountPath: /data/
         resources:
           limits:
-            memory: 1Gi
+            memory: 10Gi
             cpu: "1"
           requests:
-            memory: 1Gi
+            memory: 10Gi
             cpu: "1"
       restartPolicy: Never
       env:
