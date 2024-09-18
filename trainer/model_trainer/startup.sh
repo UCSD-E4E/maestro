@@ -2,7 +2,7 @@
 
 # Note: Goal of this is to reuse a poetry enviroment with large size
 # /data/ is the mount of the PVC
-if  [! -d "/data/model_env" ]; then
+if  [ ! -d "/data/model_env" ]; then
     mkdir /data/model_env
 fi
 
