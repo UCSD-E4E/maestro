@@ -3,6 +3,7 @@ import socketio
 import os
 from model import Trainer
 
+print(os.environ)
 pod_name = os.environ['POD_NAME']
 #import time 
 # while True: 
