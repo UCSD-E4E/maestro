@@ -6,6 +6,7 @@ ADD . /app
 RUN ls -la /app
 
 RUN pip install --upgrade pip poetry
-RUN poetry install
+# RUN poetry install
 
-CMD ["poetry", "run", "python", "src/model_trainer.py"]
+#CMD ["poetry", "run", "python", "src/model_trainer.py"]
+CMD ["./startup.sh"]

@@ -16,7 +16,7 @@ build-and-push-job:
   - cd $CI_PROJECT_DIR && docker build ./model_trainer -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
   - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
   - docker inspect -f "{{ .Size }}" $CI_REGISTRY_IMAGE:latest
-  # - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  # - docker push $CI_REGISTRY_IMAGE:latest
-  # - docker rmi -f $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
-  # - docker builder prune -a -f
+  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  - docker push $CI_REGISTRY_IMAGE:latest
+  - docker rmi -f $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+  - docker builder prune -a -f
