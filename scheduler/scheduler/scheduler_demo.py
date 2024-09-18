@@ -97,7 +97,7 @@ def spin_up_job(sid):
 @sio.on('job_ready')
 def start_job(sid, data):
     print("JOB READY", data, flush=True)
-    active_jobs[data["POD-NAME"]] = "running"
+    active_jobs[data["pod-name"]] = "running"
     print("JOB IS READY TO START", flush=True)
 
     batch = get_next_label()
@@ -110,8 +110,8 @@ def start_job(sid, data):
 
 @sio.on('job_done')
 def clean_up_job(sid, data):
-    print("got loss", data["loss"], data["POD-NAME"], active_jobs, sid, flush=True)
-    del active_jobs[data["POD-NAME"]]
+    print("got loss", data["loss"], data["pod-name"], active_jobs, sid, flush=True)
+    del active_jobs[data["pod-name"]]
     loss.append(float(data["loss"]))
     # job has returned some data
     # print data return and spin down the job
