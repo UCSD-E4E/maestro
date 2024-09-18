@@ -9,4 +9,6 @@ RUN pip install --upgrade pip poetry
 # RUN poetry install
 
 #CMD ["poetry", "run", "python", "src/model_trainer.py"]
+
+RUN chmod 777 startup.sh
 CMD ["./startup.sh"]
