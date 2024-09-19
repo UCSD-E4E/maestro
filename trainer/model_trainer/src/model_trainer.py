@@ -29,8 +29,9 @@ def trigger_test(data):
     loss = trainer.train()
 
     # number = random.randrange(0, 100)
-    # print("random number", number, flush=True)
+    print("Job Done", loss, flush=True)
     sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
+    sio.disconnect()
 
 @sio.event
 def my_message(data):
