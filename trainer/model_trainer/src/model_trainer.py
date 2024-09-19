@@ -1,6 +1,6 @@
-import random
-import socketio
+
 import os
+import socketio
 from model import Trainer
 
 print(os.environ)
