@@ -3,20 +3,21 @@ import time
 print("importing in model", flush=True)
 start = time.time()
 
-#import torch
-from timm import create_model
-
-end = time.time()
-print("import timm: ", end - start, flush=True)
-
 from torch import nn, Tensor, load, save
 from torch.optim import Adam
 from torchvision.io import read_image
 from torch.utils.data import Dataset, DataLoader
 
 end = time.time()
-
 print("import time: ", end - start, flush=True)
+
+# This takes too long!!!!
+from timm import create_model
+
+end = time.time()
+print("import timm: ", end - start, flush=True)
+
+
 
 class Trainer():
     def __init__(self, conf, data):
