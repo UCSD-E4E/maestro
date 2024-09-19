@@ -1,8 +1,8 @@
 import os
 
-import torch
-import timm
-from torch import nn
+#import torch
+from timm import create_model
+from torch import nn, Tensor, load, save
 from torch.optim import Adam
 from torchvision.io import read_image
 from torch.utils.data import Dataset, DataLoader
@@ -62,7 +62,7 @@ class DeepFishDataset(Dataset):
     def __getitem__(self, index):
         data = self.data[index]
         file_path = os.path.join(self.data_path, data["file_path"])
-        label = torch.Tensor([data["label"]])
+        label = Tensor([data["label"]])
         #print(label, data["label"], type(data["label"]))
         image = read_image(file_path).float()
         
@@ -73,7 +73,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.cfg = cfg
 
-        self.model = timm.create_model(
+        self.model = create_model(
             cfg["model_name"],
             pretrained=(not os.path.exists(cfg["model_checkpoint"])),
             num_classes=1,
@@ -82,14 +82,14 @@ class Model(nn.Module):
         self.checkpoint = None
         self.optimizer_obj = None
         if cfg["model_checkpoint"] != "" and os.path.exists(cfg["model_checkpoint"]):
-            self.checkpoint = torch.load(cfg["model_checkpoint"])
+            self.checkpoint = load(cfg["model_checkpoint"])
             self.model.load_state_dict(self.checkpoint['model_state_dict'])
 
     def forward(self, images):
         return self.model(images)
 
     def save(self):
-       torch.save({
+       save({
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer_obj.state_dict(),
             }, self.cfg["model_checkpoint"])
