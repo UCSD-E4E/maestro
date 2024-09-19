@@ -5,7 +5,7 @@ from model import Trainer
 
 print(os.environ)
 pod_name = os.environ['pod-name']
-#import time 
+import time 
 # while True: 
 #     time.sleep(100)
 #     print("loop")
@@ -20,6 +20,8 @@ def connect():
 
 @sio.on('start_job')
 def trigger_test(data):
+    print("importing in model")
+    start = time.time()
     print(data, flush=True)
     # Expect batch to be a list of directory of file and label
     batch = data["batch"]
@@ -29,7 +31,8 @@ def trigger_test(data):
     loss = trainer.train()
 
     # number = random.randrange(0, 100)
-    print("Job Done", loss, flush=True)
+    end = time.time()
+    print("Job Done", loss, "time", end - start, flush=True)
     sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
     sio.disconnect()
 

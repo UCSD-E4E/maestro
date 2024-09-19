@@ -1,3 +1,7 @@
+import time
+print("importing in model")
+start = time.time()
+
 import os
 
 #import torch
@@ -6,6 +10,10 @@ from torch import nn, Tensor, load, save
 from torch.optim import Adam
 from torchvision.io import read_image
 from torch.utils.data import Dataset, DataLoader
+
+end = time.time()
+
+print("import time: ", end - start)
 
 class Trainer():
     def __init__(self, conf, data):
