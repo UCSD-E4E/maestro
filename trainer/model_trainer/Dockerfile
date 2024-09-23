@@ -6,7 +6,7 @@ FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 # This is probably worth fixing in the future
 USER root
 RUN groupadd -g 1099 dataAccess
-RUN useradd runner -u 1099 -g 1099 -m -s /bin/bash 	
+RUN useradd -u 1099 -g 1099 -m -s /bin/bash runner
 USER runner
 WORKDIR app
 ADD . app
