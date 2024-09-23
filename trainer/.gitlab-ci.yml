@@ -1,22 +1,36 @@
 # Using example from https://ucsd-prp.gitlab.io/userdocs/development/gitlab/
-image: docker:git
-
-default:
-  tags:
-  - docker
-  before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+# Using kaniko maybe faster than normal docker build overtime with caching
+image: gcr.io/kaniko-project/executor:debug
 
 stages:
 - build-and-push
 
 build-and-push-job:
   stage: build-and-push
+  variables:
+    GODEBUG: "http2client=0"
   script:
-  - cd $CI_PROJECT_DIR && docker build ./model_trainer -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
-  - docker inspect -f "{{ .Size }}" $CI_REGISTRY_IMAGE:latest
-  - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  - docker push $CI_REGISTRY_IMAGE:latest
-  - docker rmi -f $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
-  - docker builder prune -a -f
+  - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+  - /kaniko/executor --cache=true --push-retry=10 --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA --destination $CI_REGISTRY_IMAGE:latest
+
+# image: docker:git
+
+# default:
+#   tags:
+#   - docker
+#   before_script:
+#   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+# stages:
+# - build-and-push
+
+# build-and-push-job:
+#   stage: build-and-push
+#   script:
+#   - cd $CI_PROJECT_DIR && docker build ./model_trainer -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+#   - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+#   - docker inspect -f "{{ .Size }}" $CI_REGISTRY_IMAGE:latest
+#   - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+#   - docker push $CI_REGISTRY_IMAGE:latest
+#   - docker rmi -f $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+#   - docker builder prune -a -f
