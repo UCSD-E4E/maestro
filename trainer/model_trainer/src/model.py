@@ -101,10 +101,11 @@ class Model(nn.Module):
         return self.model(images)
 
     def save(self):
-       save({
+        print(self.cfg["model_checkpoint"], flush=True)
+        save({
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer_obj.state_dict(),
-            }, self.cfg["model_checkpoint"])
+            }, self.cfg["model_checkpoint"].strip())
 
     def optimizer(self):
         optimizer = Adam(self.model.parameters(), lr=self.cfg["learning_rate"])
