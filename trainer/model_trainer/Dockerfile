@@ -7,7 +7,9 @@ FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 USER root
 RUN groupadd -g 1099 dataAccess
 RUN useradd -u 1099 -g 1099 -m -s /bin/bash runner
+RUN echo "hello"
 USER runner
+RUN echo "hello"
 WORKDIR app
 ADD . app
 RUN ls -la .
