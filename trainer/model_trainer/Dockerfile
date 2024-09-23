@@ -12,6 +12,6 @@ RUN ls -la .
 RUN pip install --upgrade pip timm python-socketio requests
 
 RUN whoami
-ENTRYPOINT ["/bin/bash", "-c", "${@}"]
-CMD ["python", "src/model_trainer.py"] 
+ENTRYPOINT ["python", "src/model_trainer.py"] 
+# CMD ["python", "src/model_trainer.py"] 
 # 
