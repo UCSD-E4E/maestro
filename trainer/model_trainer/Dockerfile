@@ -5,6 +5,7 @@ FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 # jupyter build sets users to jovyan
 # This is probably worth fixing in the future
 USER root
+RUN groupadd -g 1009 dataAccess
 RUN useradd runner -u 1099 -g 1099 -m -s /bin/bash 	
 USER runner
 WORKDIR ~/app
