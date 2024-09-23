@@ -96,15 +96,13 @@ class Model(nn.Module):
         if cfg["model_checkpoint"] != "" and os.path.exists(cfg["model_checkpoint"]):
             self.checkpoint = load(cfg["model_checkpoint"])
             self.model.load_state_dict(self.checkpoint['model_state_dict'])
+        # TODO: Load in optimizer
 
     def forward(self, images):
         return self.model(images)
 
     def save(self):
-       save({
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer_obj.state_dict(),
-            }, self.cfg["model_checkpoint"])
+       save(self.model.state_dict(), self.cfg["model_checkpoint"])
 
     def optimizer(self):
         optimizer = Adam(self.model.parameters(), lr=self.cfg["learning_rate"])
