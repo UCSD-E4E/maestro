@@ -10,7 +10,7 @@ RUN useradd -u 1099 -g 1099 -m -s /bin/bash runner
 USER runner
 WORKDIR app
 ADD . app
-RUN ls -la app
+RUN ls -la .
 
 RUN pip install --upgrade pip timm python-socketio requests
 # RUN poetry install
