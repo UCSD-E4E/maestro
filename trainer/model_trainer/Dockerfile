@@ -8,9 +8,9 @@ USER root
 RUN groupadd -g 1099 dataAccess
 RUN useradd runner -u 1099 -g 1099 -m -s /bin/bash 	
 USER runner
-WORKDIR ~/app
-ADD . ~/app
-RUN ls -la ~/app
+WORKDIR app
+ADD . app
+RUN ls -la app
 
 RUN pip install --upgrade pip timm python-socketio requests
 # RUN poetry install
