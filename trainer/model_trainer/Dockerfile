@@ -6,15 +6,11 @@ FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 # This is probably worth fixing in the future
 RUN groups
 USER root
-RUN groupadd -g 1099 dataAccess
-RUN useradd -u 1099 -g 1099 -m -s /bin/bash runner
-RUN chown -R runner:runner /home/runner
-RUN ls -l /bin/bash
+usermod -aG root jovyan
+USER jovyan
+WORKDIR /home/jovyan/app
 RUN echo "hello"
-USER runner
-WORKDIR /home/runner/app
-RUN echo "hello"
-ADD . app
+ADD . /home/jovyan/app
 RUN ls -la .
 
 RUN pip install --upgrade pip timm python-socketio requests
@@ -25,4 +21,5 @@ RUN pip install --upgrade pip timm python-socketio requests
 RUN chmod 770 startup.sh
 RUN chmod -R 770 /data
 RUN ls -la /data
-CMD ["./startup.sh"] 
+RUN touch /data/has_permissions.txt
+CMD ["python", "src/model_trainer.py"] 
