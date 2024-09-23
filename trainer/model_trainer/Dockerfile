@@ -10,5 +10,6 @@ RUN pip install --upgrade pip timm python-socketio requests
 
 #CMD ["poetry", "run", "python", "src/model_trainer.py"]
 
-RUN chmod 777 startup.sh
-CMD ["./startup.sh"]
+#RUN chmod 777 startup.sh
+CMD ["python", "src/model_trainer.py"] 
+#"./startup.sh"
