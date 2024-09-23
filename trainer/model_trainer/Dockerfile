@@ -22,7 +22,7 @@ RUN pip install --upgrade pip timm python-socketio requests
 
 #RUN chmod 770 startup.sh
 #RUN chmod -R 770 /data
-RUN ls -la /data
-RUN ls -la /
-RUN touch /data/has_permissions.txt
+# RUN ls -la /data
+# RUN ls -la /
+# RUN touch /data/has_permissions.txt
 CMD ["python", "src/model_trainer.py"] 
