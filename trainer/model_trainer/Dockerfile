@@ -6,7 +6,7 @@ FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 # This is probably worth fixing in the future
 RUN groups
 USER root
-usermod -aG root jovyan
+RUN usermod -aG root jovyan
 USER jovyan
 WORKDIR /home/jovyan/app
 RUN echo "hello"
