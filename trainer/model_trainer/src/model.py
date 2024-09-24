@@ -77,7 +77,6 @@ class DeepFishDataset(Dataset):
         label = Tensor([data["label"]])
         #print(label, data["label"], type(data["label"]))
         image = read_image(file_path).float()
-        
         return image, label
 
 class Model(nn.Module):
@@ -101,7 +100,8 @@ class Model(nn.Module):
         return self.model(images)
 
     def save(self):
-       save({
+        print(self.cfg["model_checkpoint"], flush=True)
+        save({
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer_obj.state_dict(),
             }, self.cfg["model_checkpoint"])
