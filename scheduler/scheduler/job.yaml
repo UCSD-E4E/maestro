@@ -14,20 +14,23 @@ spec:
       - name: trainer
         image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
         env:
-      - name: pod-name
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
+        - name: pod-name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
         volumeMounts:
           - name: data-pvc
             mountPath: /data/
         resources:
+        resources:
           limits:
-            memory: 10Gi
-            cpu: "4"
+            memory: 24Gi
+            cpu: "12"
+            nvidia.com/gpu: 1
           requests:
-            memory: 10Gi
-            cpu: "4"
+            memory: 24Gi
+            cpu: "12"
+            nvidia.com/gpu: 1
       restartPolicy: Never
       imagePullSecrets:
         - name: regcred

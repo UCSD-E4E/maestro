@@ -5,10 +5,6 @@ import socketio
 from os import path
 import yaml
 import pandas as pd
-import time
-
-# while True:
-#     time.sleep(1)
 
 
 ## DEBUG   
@@ -48,10 +44,10 @@ df["file"] = df["ID"] + ".jpg"
 active_idx = 0
 
 def get_next_label():
-    row = df.sample(1)
+    row = df.sample(1).iloc[0]
     return {
         "file_path": row["file"],
-        "label": row["labels"]
+        "label": int(row["labels"])
     }
 
 def update_labeled_points(idx):
@@ -102,20 +98,25 @@ def start_job(sid, data):
 
     batch = get_next_label()
     data = {
-        "batch": batch,
+        "batch": [batch],
         "cfg": cfg
     }
-    sio.emit('start_job', data)
+    print(data, flush=True)
+    sio.emit('start_job', data, room=sid)
     
 
 @sio.on('job_done')
 def clean_up_job(sid, data):
     print("got loss", data["loss"], data["pod-name"], active_jobs, sid, flush=True)
-    del active_jobs[data["pod-name"]]
+    #del active_jobs[data["pod-name"]]
     loss.append(float(data["loss"]))
     # job has returned some data
     # print data return and spin down the job
-    batch_v1_api.delete_namespaced_job(data["PODNAME"], "krg-maestro")
+    batch_v1_api.delete_namespaced_job(
+        "-".join(data["pod-name"].split("-")[:-1]),
+        "krg-maestro",
+        propagation_policy="Background"
+    )
     spin_up_job(None)
 
 @sio.on('get_loss')
