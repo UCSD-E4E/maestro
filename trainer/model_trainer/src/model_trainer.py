@@ -34,7 +34,7 @@ def trigger_test(data):
     end = time.time()
     print("Job Done", loss, "time", end - start, flush=True)
     sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
-    sio.disconnect()
+    #sio.disconnect()
 
 @sio.event
 def my_message(data):
