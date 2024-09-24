@@ -19,7 +19,7 @@ def connect():
     sio.emit('job_ready', {'pod-name': pod_name})
 
 @sio.on('start_job')
-def trigger_test(data):
+async def trigger_test(data):
     print("importing in model")
     start = time.time()
     print(data, flush=True)
@@ -32,7 +32,8 @@ def trigger_test(data):
 
     end = time.time()
     print("Job Done", loss, "time", end - start, flush=True)
-    sio.emit('job_done', {'loss': loss, "pod-name": pod_name}, callback=lambda x: sio.disconnect())
+    await sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
+    sio.disconnect()
 
 @sio.event
 def my_message(data):
