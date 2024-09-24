@@ -30,11 +30,9 @@ def trigger_test(data):
     trainer.build()
     loss = trainer.train()
 
-    # number = random.randrange(0, 100)
     end = time.time()
     print("Job Done", loss, "time", end - start, flush=True)
-    sio.emit('job_done', {'loss': loss, "pod-name": pod_name})
-    #sio.disconnect()
+    sio.emit('job_done', {'loss': loss, "pod-name": pod_name}, callback=lambda x: sio.disconnect())
 
 @sio.event
 def my_message(data):

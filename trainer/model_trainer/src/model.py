@@ -77,7 +77,6 @@ class DeepFishDataset(Dataset):
         label = Tensor([data["label"]])
         #print(label, data["label"], type(data["label"]))
         image = read_image(file_path).float()
-        
         return image, label
 
 class Model(nn.Module):
@@ -105,7 +104,7 @@ class Model(nn.Module):
         save({
             'model_state_dict': self.model.state_dict(),
             'optimizer_state_dict': self.optimizer_obj.state_dict(),
-            }, self.cfg["model_checkpoint"].strip())
+            }, self.cfg["model_checkpoint"])
 
     def optimizer(self):
         optimizer = Adam(self.model.parameters(), lr=self.cfg["learning_rate"])
