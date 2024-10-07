@@ -93,8 +93,23 @@ class Model(nn.Module):
         self.checkpoint = None
         self.optimizer_obj = None
         if cfg["model_checkpoint"] != "" and os.path.exists(cfg["model_checkpoint"]):
-            self.checkpoint = load(cfg["model_checkpoint"])
-            self.model.load_state_dict(self.checkpoint['model_state_dict'])
+            # Hypothesis: Model loads can be affected by processes accessing the same
+            # File, so here is a system to wait for another process to finsh
+            # Note: Written after getting a "file read failed" error but did not
+            # obsreve file corruption and could successfully load the failed file
+            # 30 mins after a failed run. 
+            for i in range(10):
+                if i > 8:
+                    print("HEY THE FILE IS ACTUALLY CORRUPTED!!!")
+                    return
+                try:
+                    self.checkpoint = load(cfg["model_checkpoint"])
+                    self.model.load_state_dict(self.checkpoint['model_state_dict'])
+                except Exception as e:
+                    print(e, "retrying:", i)
+                    time.sleep(15)
+                    continue
+                break
 
     def forward(self, images):
         return self.model(images)
