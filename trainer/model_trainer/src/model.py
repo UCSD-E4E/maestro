@@ -3,10 +3,13 @@ import time
 print("importing in model", flush=True)
 start = time.time()
 
+import torch
 from torch import nn, Tensor, load, save
 from torch.optim import Adam
 from torchvision.io import read_image
 from torch.utils.data import Dataset, DataLoader
+import torchvision
+import torchvision.transforms as transforms
 
 end = time.time()
 print("import time: ", end - start, flush=True)
@@ -26,6 +29,23 @@ class Trainer():
         self.model = None
 
     def build(self):
+        # Plan, 
+        # - use this to cheaply download the datasets
+        # - stop the run, then explore
+        # - create the test train stuff via schuduler
+        transform = transforms.Compose(
+            [transforms.ToTensor(),
+            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
+        trainset = torchvision.datasets.CIFAR10(root='/data', train=True,
+                                        download=True, transform=transform)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=2,
+                                                shuffle=True, num_workers=2)
+
+        testset = torchvision.datasets.CIFAR10(root='/data', train=False,
+                                            download=True, transform=transform)
+        testloader = torch.utils.data.DataLoader(testset, batch_size=2,
+                                                shuffle=False, num_workers=2)
         dataset = DeepFishDataset(self.data, self.conf["data_path"])
         self.dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
         self.model = Model(self.conf).cuda()
