@@ -1,16 +1,16 @@
 
 import os
 import socketio
+import time 
 from model import Trainer
 
 print(os.environ)
-pod_name = os.environ['pod-name']
-import time 
-# while True: 
-#     time.sleep(100)
-#     print("loop")
-
 print("RUNNING PYTHON!!!", flush=True)
+
+
+
+
+pod_name = os.environ['pod-name']
 sio = socketio.Client()
 
 @sio.event
