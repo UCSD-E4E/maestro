@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "maestro-cli"
+version = "0.1.0"
+description = ""
+authors = ["Sean Perry <sean.hyatt.perry@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+kubernetes = "^32.0.0"
+click = "^8.1.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+maestro_cli = "maestro_cli.cli:cli"
+
+[tool.setuptools.package-data]
+maestro_cli = ["job_configs/*.yaml"]

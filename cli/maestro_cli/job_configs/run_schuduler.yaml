@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: test-schuduler
+  labels:
+    group: maestro
+spec:
+  template:
+    metadata:
+      name: test-schuduler
+      labels:
+        k8s-app: test-schuduler
+    spec:
+      serviceAccountName: maestro
+      containers:
+      - name: schuduler
+        image: gitlab-registry.nrp-nautilus.io/model-maestro/scheduler:latest
+        volumeMounts:
+          - name: data-pvc
+            mountPath: /data/
+        resources:
+          limits:
+            memory: 12Gi
+            cpu: "1"
+          requests:
+            memory: 10Gi
+            cpu: "1"
+      restartPolicy: Never
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+      - name: data-pvc
+        persistentVolumeClaim:
+          claimName: data-pvc
