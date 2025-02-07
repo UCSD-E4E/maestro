@@ -23,8 +23,7 @@ CFG_PATH = "config.json"
 @click.group()
 def cli():
     """
-    Placeholder for holding a group of commands
-    See every @cli.comand()
+    Handler for all related CLI for Maestro Services
     """
 
 

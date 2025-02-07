@@ -6,7 +6,7 @@ authors = ["Sean Perry <sean.hyatt.perry@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.8,<4.0"
 kubernetes = "^32.0.0"
 click = "^8.1.8"
 
