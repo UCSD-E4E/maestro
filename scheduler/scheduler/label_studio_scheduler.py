@@ -12,7 +12,7 @@ from label_studio_ml.api import init_app
 from maestro_model import MaestroModel, sio
 
 
-print(os.environ['TRAINER_IMAGE'])
+print(os.environ['TRAINER_IMAGE'], os.environ['SERVER_URL'])
 
 
 # This should handle the RESTful api requests from label studio
