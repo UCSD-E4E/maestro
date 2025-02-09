@@ -42,3 +42,5 @@ jobs:
         tags: 
         - ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}
         push: true
+        cache-from: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache
+        cache-to: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache,mode=max
