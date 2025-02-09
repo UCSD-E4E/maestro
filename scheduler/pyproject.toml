@@ -12,6 +12,8 @@ python-socketio = "^5.11.3"
 eventlet = "^0.36.1"
 pyyaml = "^6.0.2"
 pandas = "^2.2.2"
+greenlet = "3.0"
+label-studio-ml = {git = "https://github.com/UCSD-E4E/label-studio-ml-backend", rev = "poetry"}
 
 
 [build-system]

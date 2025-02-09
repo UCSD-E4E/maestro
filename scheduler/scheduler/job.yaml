@@ -12,7 +12,7 @@ spec:
       serviceAccountName: maestro
       containers:
       - name: trainer
-        image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
+        image: ghcr.io/ucsd-e4e/maestro_trainer:main
         env:
         - name: pod-name
           valueFrom:
