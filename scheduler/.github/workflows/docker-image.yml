@@ -31,8 +31,8 @@ jobs:
         file: Dockerfile
         tags: ghcr.io/ucsd-e4e/maestro_scheduler:main
         push: true
-        cache-from: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:main_cache
-        cache-to: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:main_cache,mode=max
+        cache-from: type=registry,ref=ghcr.io/ucsd-e4e/maestro_scheduler:main_cache
+        cache-to: type=registry,ref=ghcr.io/ucsd-e4e/maestro_scheduler:main_cache,mode=max
     -
       name: Build prod and push
       if: github.ref != 'refs/heads/main'
@@ -42,5 +42,5 @@ jobs:
         file: Dockerfile
         tags: ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}
         push: true
-        cache-from: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache
-        cache-to: type=registry,ref=user/ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache,mode=max
+        cache-from: type=registry,ref=ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache
+        cache-to: type=registry,ref=ghcr.io/ucsd-e4e/maestro_scheduler:${{ github.head_ref }}_cache,mode=max
