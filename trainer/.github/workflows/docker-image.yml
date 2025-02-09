@@ -29,7 +29,7 @@ jobs:
       with:
         context: .
         file: Dockerfile
-        tags: ghcr.io/ucsd-e4e/maestro_trainer:latest
+        tags: ghcr.io/ucsd-e4e/maestro_trainer:main
         push: true
     -
       name: Build prod and push
