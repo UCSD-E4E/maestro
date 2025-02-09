@@ -89,15 +89,20 @@ def spin_up_jobs(cfg):
     ] = pvc_name
     
     # Changes the image pull location for the scheduler
-    scheduler["spec"]["template"]["spec"]["template"]["spec"]["containers"][0][
+    scheduler["spec"]["template"]["spec"]["containers"][0][
         "image"
     ] = f"ghcr.io/ucsd-e4e/maestro_scheduler:{scheduler_branch}"
 
     # Since the scheduler controls the trainer job spin up and down
-    # we have to let the scheduler know which env to pull from
-    scheduler["spec"]["template"]["spec"]["template"]["spec"]["containers"][0][
+    # we have to let the scheduler know which image to pull from
+    scheduler["spec"]["template"]["spec"]["containers"][0][
         "env"
     ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{scheduler_branch}"
+
+    # and URL to link to to talk to the scheduler
+    scheduler["spec"]["template"]["spec"]["containers"][0][
+        "env"
+    ][1]["value"] = url
 
     # Change configuration for storage
     pvc = load_yaml("run_storage.yaml")

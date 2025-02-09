@@ -18,6 +18,8 @@ spec:
         env:
           - name: TRAINER_IMAGE
             value: ghcr.io/ucsd-e4e/maestro_trainer:main
+          - name: SERVER_URL
+            value: https://test-service2.nrp-nautilus.io
         volumeMounts:
           - name: data-pvc
             mountPath: /data/
