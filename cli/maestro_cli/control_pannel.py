@@ -6,7 +6,7 @@ Based on the old control_pannel.ipynb in the old gitlab
 import yaml
 import importlib.resources as pkg_resources
 from kubernetes import client, config, utils
-
+from pygit2 import Repository
 
 from maestro_cli import job_configs
 
@@ -52,6 +52,10 @@ def spin_up_jobs(cfg):
     namespace = cfg["namespace"]
     pvc_name = f"{uuid}-maestro-data-pvc"
 
+    scheduler_branch = Repository(cfg["scheduler_path"]).head.shorthand
+    trainer_branch = Repository(cfg["trainer_path"]).head.shorthand
+    
+
     # Change configuration for network
     net = load_yaml("run_schuduler-net.yaml")
     net["metadata"]["name"] = k8sapp
@@ -83,7 +87,17 @@ def spin_up_jobs(cfg):
     scheduler["spec"]["template"]["spec"]["volumes"][0]["persistentVolumeClaim"][
         "claimName"
     ] = pvc_name
-    ## TODO add config for scheduler container name and where to pull it...
+    
+    # Changes the image pull location for the scheduler
+    scheduler["spec"]["template"]["spec"]["template"]["spec"]["containers"][0][
+        "image"
+    ] = f"ghcr.io/ucsd-e4e/maestro_scheduler:{scheduler_branch}"
+
+    # Since the scheduler controls the trainer job spin up and down
+    # we have to let the scheduler know which env to pull from
+    scheduler["spec"]["template"]["spec"]["template"]["spec"]["containers"][0][
+        "env"
+    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{scheduler_branch}"
 
     # Change configuration for storage
     pvc = load_yaml("run_storage.yaml")

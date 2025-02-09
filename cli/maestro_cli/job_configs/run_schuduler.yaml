@@ -14,7 +14,10 @@ spec:
       serviceAccountName: maestro
       containers:
       - name: schuduler
-        image: gitlab-registry.nrp-nautilus.io/model-maestro/scheduler:latest
+        image: ghcr.io/ucsd-e4e/maestro_scheduler:main
+        env:
+          - name: TRAINER_IMAGE
+            value: ghcr.io/ucsd-e4e/maestro_trainer:main
         volumeMounts:
           - name: data-pvc
             mountPath: /data/
