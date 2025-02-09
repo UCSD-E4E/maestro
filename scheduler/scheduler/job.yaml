@@ -18,6 +18,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        - name: SERVER_URL
+          value: https://test-service2.nrp-nautilus.io
         volumeMounts:
           - name: data-pvc
             mountPath: /data/

@@ -11,8 +11,28 @@ import copy
 from label_studio_ml.api import init_app
 from maestro_model import MaestroModel, sio
 
-
+## DEBUG
 print(os.environ['TRAINER_IMAGE'], os.environ['SERVER_URL'])
+
+
+## DEMO FOR STARTING A JOB
+config.load_incluster_config()
+v1 = client.ApiClient()
+batch_v1_api = client.BatchV1Api()
+yaml_file = 'scheduler/job.yaml'
+
+#https://github.com/kubernetes-client/python/issues/363
+current_namespace = config.list_kube_config_contexts()[1]['context']['namespace']
+
+with open(yaml_file) as f:
+    job_dict = yaml.safe_load(f)
+    print(job_dict)
+    job_dict["metadata"]["name"] = "model-training-1"
+    job_dict["spec"]["template"]["spec"]["containers"][0]["env"][1]["value"] = os.environ['SERVER_URL']
+    job = utils.create_from_dict(v1, job_dict,verbose=True, namespace=current_namespace)[0]
+    print(job)
+    print(dir(job))
+    print(job.metadata.name)
 
 
 # This should handle the RESTful api requests from label studio
