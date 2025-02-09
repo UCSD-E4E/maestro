@@ -38,5 +38,5 @@ jobs:
       with:
         context: .
         file: Dockerfile
-        tags: ghcr.io/ucsd-e4e/maestro_trainer:${{ github.sha }}
+        tags: ghcr.io/ucsd-e4e/maestro_trainer:${{ github.head_ref }}
         push: true
