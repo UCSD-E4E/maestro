@@ -12,7 +12,7 @@ from label_studio_ml.api import init_app
 from maestro_model import MaestroModel, sio
 
 ## DEBUG
-print(os.environ['TRAINER_IMAGE'], os.environ['SERVER_URL'])
+print(os.environ)
 
 
 ## DEMO FOR STARTING A JOB
@@ -22,7 +22,7 @@ batch_v1_api = client.BatchV1Api()
 yaml_file = 'scheduler/job.yaml'
 
 #https://github.com/kubernetes-client/python/issues/363
-current_namespace = config.list_kube_config_contexts()[1]['context']['namespace']
+current_namespace = os.environ["POD_NAMESPACE"]
 
 with open(yaml_file) as f:
     job_dict = yaml.safe_load(f)
