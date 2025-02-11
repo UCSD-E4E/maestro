@@ -13,6 +13,7 @@ spec:
       containers:
       - name: trainer
         image: ghcr.io/ucsd-e4e/maestro_trainer:main
+        imagePullPolicy: Always 
         env:
         - name: pod-name
           valueFrom:
