@@ -147,6 +147,14 @@ def spin_down_jobs(cfg, keep_storage=True):
     label_selector = f"group={uuid}"
 
     delete_all_object(
+        core_v1_api.list_namespaced_pod,
+        core_v1_api.delete_namespaced_pod,
+        namespace,
+        label_selector,
+        dry_run=False,
+    )
+
+    delete_all_object(
         batch_v1_api.list_namespaced_job,
         batch_v1_api.delete_namespaced_job,
         namespace,
