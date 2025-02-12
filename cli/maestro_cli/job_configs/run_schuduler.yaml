@@ -17,10 +17,6 @@ spec:
         image: ghcr.io/ucsd-e4e/maestro_scheduler:main
         imagePullPolicy: Always 
         env:
-          - name: SCHEDULER_POD_NAME
-            valueFrom:
-              fieldRef:
-                fieldPath: metadata.name
           - name: TRAINER_IMAGE
             value: ghcr.io/ucsd-e4e/maestro_trainer:main
           - name: SERVER_URL

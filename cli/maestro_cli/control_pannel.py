@@ -75,6 +75,7 @@ def spin_up_jobs(cfg):
 
     # Change configuration for scheduler
     scheduler = load_yaml("run_schuduler.yaml")
+    scheduler["metadata"]["namespace"] = namespace
     scheduler["metadata"]["name"] = scheduler_name
     scheduler["metadata"]["labels"]["group"] = uuid
     scheduler["spec"]["template"]["metadata"]["labels"]["k8s-app"] = scheduler_name
@@ -97,7 +98,7 @@ def spin_up_jobs(cfg):
     # we have to let the scheduler know which image to pull from
     scheduler["spec"]["template"]["spec"]["containers"][0][
         "env"
-    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{scheduler_branch}"
+    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{trainer_branch}"
 
     # and URL to link to to talk to the scheduler
     scheduler["spec"]["template"]["spec"]["containers"][0][
