@@ -28,14 +28,14 @@ with open(yaml_file) as f:
     job_dict = yaml.safe_load(f)
     print(job_dict)
 
-    uuid =  os.environ["SCHEDULER_POD_NAME"].split("-maestro-scheduler")[0]
+    uuid =  os.environ["HOSTNAME"].split("-maestro-scheduler")[0]
     job_name =  f"{uuid}-model-training-1"
     namespace = os.environ["POD_NAMESPACE"]
     job_image = os.environ["TRAINER_IMAGE"]
     url = os.environ['SERVER_URL']
     pvc_name = f"{uuid}-maestro-data-pvc"
 
-    job_dict["metadata"]["name"] =job_name
+    job_dict["metadata"]["name"] = job_name
     job_dict["metadata"]["labels"]["group"] = uuid
     job_dict["spec"]["template"]["metadata"]["labels"]["k8s-app"] = job_name
     job_dict["spec"]["template"]["metadata"]["name"] = job_name
