@@ -22,17 +22,34 @@ batch_v1_api = client.BatchV1Api()
 yaml_file = 'scheduler/job.yaml'
 
 #https://github.com/kubernetes-client/python/issues/363
-current_namespace = os.environ["POD_NAMESPACE"]
+
 
 with open(yaml_file) as f:
     job_dict = yaml.safe_load(f)
     print(job_dict)
-    job_dict["metadata"]["name"] = "model-training-1"
-    job_dict["spec"]["template"]["spec"]["containers"][0]["env"][1]["value"] = os.environ['SERVER_URL']
-    job = utils.create_from_dict(v1, job_dict,verbose=True, namespace=current_namespace)[0]
-    print(job)
-    print(dir(job))
-    print(job.metadata.name)
+
+    uuid =  os.environ["SCHEDULER_POD_NAME"].split("-maestro-scheduler")[0]
+    job_name =  f"{uuid}-model-training-1"
+    namespace = os.environ["POD_NAMESPACE"]
+    job_image = os.environ["TRAINER_IMAGE"]
+    url = os.environ['SERVER_URL']
+    pvc_name = f"{uuid}-maestro-data-pvc"
+
+    job_dict["metadata"]["name"] =job_name
+    job_dict["metadata"]["labels"]["group"] = uuid
+    job_dict["spec"]["template"]["metadata"]["labels"]["k8s-app"] = job_name
+    job_dict["spec"]["template"]["metadata"]["name"] = job_name
+    job_dict["spec"]["template"]["spec"]["containers"][0]["image"] = job_image
+    job_dict["spec"]["template"]["spec"]["containers"][0]["env"][1]["value"] = url
+    job_dict["spec"]["template"]["spec"]["containers"][0]["volumeMounts"][0][
+        "name"
+    ] = pvc_name
+    job_dict["spec"]["template"]["spec"]["volumes"][0]["name"] = pvc_name
+    job_dict["spec"]["template"]["spec"]["volumes"][0]["persistentVolumeClaim"][
+        "claimName"
+    ] = pvc_name
+    job = utils.create_from_dict(v1, job_dict,verbose=True, namespace=namespace)[0]
+    print("starting", job.metadata.name)
 
 
 # This should handle the RESTful api requests from label studio
