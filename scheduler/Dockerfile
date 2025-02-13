@@ -1,4 +1,4 @@
-FROM python
+FROM quay.io/jupyter/pytorch-notebook:cuda12-python-3.11.8
 
 WORKDIR /app
 ADD . /app
@@ -8,4 +8,4 @@ RUN poetry install
 
 EXPOSE 3000
 
-CMD ["poetry", "run", "python", "scheduler/scheduler_demo.py"]
+CMD ["poetry", "run", "python", "scheduler/label_studio_scheduler.py"]

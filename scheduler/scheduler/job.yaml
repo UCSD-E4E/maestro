@@ -2,6 +2,8 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: trainer
+  labels:
+    group: maestro
 spec:
   template:
     metadata:
@@ -12,12 +14,15 @@ spec:
       serviceAccountName: maestro
       containers:
       - name: trainer
-        image: gitlab-registry.nrp-nautilus.io/model-maestro/model_trainer:latest
+        image: ghcr.io/ucsd-e4e/maestro_trainer:main
+        imagePullPolicy: Always 
         env:
         - name: pod-name
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
+        - name: SERVER_URL
+          value: https://test-service2.nrp-nautilus.io
         volumeMounts:
           - name: data-pvc
             mountPath: /data/
