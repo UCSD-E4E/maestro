@@ -11,6 +11,6 @@ WORKDIR /app
 ADD . /app
 RUN ls -la .
 
-ENTRYPOINT ["python", "src/model_trainer.py"] 
+ENTRYPOINT ["python", "model_trainer/src/model_trainer.py"] 
 # CMD ["python", "src/model_trainer.py"] 
 # 
