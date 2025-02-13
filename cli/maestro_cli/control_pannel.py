@@ -6,7 +6,7 @@ Based on the old control_pannel.ipynb in the old gitlab
 import yaml
 import importlib.resources as pkg_resources
 from kubernetes import client, config, utils
-
+from pygit2 import Repository
 
 from maestro_cli import job_configs
 
@@ -52,6 +52,10 @@ def spin_up_jobs(cfg):
     namespace = cfg["namespace"]
     pvc_name = f"{uuid}-maestro-data-pvc"
 
+    scheduler_branch = Repository(cfg["scheduler_path"]).head.shorthand
+    trainer_branch = Repository(cfg["trainer_path"]).head.shorthand
+    
+
     # Change configuration for network
     net = load_yaml("run_schuduler-net.yaml")
     net["metadata"]["name"] = k8sapp
@@ -71,6 +75,7 @@ def spin_up_jobs(cfg):
 
     # Change configuration for scheduler
     scheduler = load_yaml("run_schuduler.yaml")
+    scheduler["metadata"]["namespace"] = namespace
     scheduler["metadata"]["name"] = scheduler_name
     scheduler["metadata"]["labels"]["group"] = uuid
     scheduler["spec"]["template"]["metadata"]["labels"]["k8s-app"] = scheduler_name
@@ -83,7 +88,22 @@ def spin_up_jobs(cfg):
     scheduler["spec"]["template"]["spec"]["volumes"][0]["persistentVolumeClaim"][
         "claimName"
     ] = pvc_name
-    ## TODO add config for scheduler container name and where to pull it...
+    
+    # Changes the image pull location for the scheduler
+    scheduler["spec"]["template"]["spec"]["containers"][0][
+        "image"
+    ] = f"ghcr.io/ucsd-e4e/maestro_scheduler:{scheduler_branch}"
+
+    # Since the scheduler controls the trainer job spin up and down
+    # we have to let the scheduler know which image to pull from
+    scheduler["spec"]["template"]["spec"]["containers"][0][
+        "env"
+    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{trainer_branch}"
+
+    # and URL to link to to talk to the scheduler
+    scheduler["spec"]["template"]["spec"]["containers"][0][
+        "env"
+    ][1]["value"] = url
 
     # Change configuration for storage
     pvc = load_yaml("run_storage.yaml")
@@ -126,6 +146,14 @@ def spin_down_jobs(cfg, keep_storage=True):
     uuid = cfg["UUID"]
     namespace = cfg["namespace"]
     label_selector = f"group={uuid}"
+
+    delete_all_object(
+        core_v1_api.list_namespaced_pod,
+        core_v1_api.delete_namespaced_pod,
+        namespace,
+        label_selector,
+        dry_run=False,
+    )
 
     delete_all_object(
         batch_v1_api.list_namespaced_job,

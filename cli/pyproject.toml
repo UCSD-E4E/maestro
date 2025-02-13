@@ -1,14 +1,15 @@
 [tool.poetry]
 name = "maestro-cli"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Sean Perry <sean.hyatt.perry@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.10,<4.0"
 kubernetes = "^32.0.0"
 click = "^8.1.8"
+pygit2 = "^1.17.0"
 
 
 [build-system]

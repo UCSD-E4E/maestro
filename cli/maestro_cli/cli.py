@@ -121,3 +121,7 @@ def configure(cfg_file, scheduler_path, trainer_path, ingress_url, namespace, na
 
 if __name__ == "__main__":
     cli()
+    # from pygit2 import Repository
+
+    # repo = Repository('.')
+    # print(str(repo.head.shorthand ))
