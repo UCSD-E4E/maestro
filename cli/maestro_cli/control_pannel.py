@@ -61,7 +61,7 @@ def spin_up_jobs(cfg):
     net["metadata"]["name"] = k8sapp
     net["metadata"]["labels"]["k8s-app"] = k8sapp
     net["metadata"]["labels"]["group"] = uuid
-    net["spec"]["selector"]["k8s-app"] = k8sapp
+    net["spec"]["selector"]["k8s-app"] = scheduler_name #points to scheduler from proxy
 
     # Change configuration for ingress
     ingress = load_yaml("run_schuduler-ingress.yaml")
