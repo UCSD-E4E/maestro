@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "maestro-cli"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Sean Perry <sean.hyatt.perry@gmail.com>"]
 readme = "README.md"
