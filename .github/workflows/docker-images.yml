@@ -9,6 +9,10 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +20,7 @@ jobs:
       matrix:
         component: [scheduler, trainer]
     env:
-      IMAGE: ghcr.io/ucsd-e4e/maestro_${{ matrix.component }}
+      IMAGE: ghcr.io/ucsd-e4e/maestro-${{ matrix.component }}
       TAG: ${{ github.ref == 'refs/heads/main' && 'main' || github.head_ref }}
     steps:
     -

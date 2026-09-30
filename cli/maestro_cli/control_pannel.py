@@ -92,13 +92,13 @@ def spin_up_jobs(cfg):
     # Changes the image pull location for the scheduler
     scheduler["spec"]["template"]["spec"]["containers"][0][
         "image"
-    ] = f"ghcr.io/ucsd-e4e/maestro_scheduler:{scheduler_branch}"
+    ] = f"ghcr.io/ucsd-e4e/maestro-scheduler:{scheduler_branch}"
 
     # Since the scheduler controls the trainer job spin up and down
     # we have to let the scheduler know which image to pull from
     scheduler["spec"]["template"]["spec"]["containers"][0][
         "env"
-    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro_trainer:{trainer_branch}"
+    ][0]["value"] = f"ghcr.io/ucsd-e4e/maestro-trainer:{trainer_branch}"
 
     # and URL to link to to talk to the scheduler
     scheduler["spec"]["template"]["spec"]["containers"][0][

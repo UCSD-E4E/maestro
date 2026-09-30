@@ -14,7 +14,7 @@ spec:
       serviceAccountName: maestro
       containers:
       - name: trainer
-        image: ghcr.io/ucsd-e4e/maestro_trainer:main
+        image: ghcr.io/ucsd-e4e/maestro-trainer:main
         imagePullPolicy: Always 
         env:
         - name: pod-name
