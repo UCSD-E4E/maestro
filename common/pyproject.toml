@@ -1,0 +1,18 @@
+[project]
+name = "maestro-common"
+version = "0.1.0"
+description = "Shared Maestro code: Label Studio brush masks, rewards, bandit, query strategies"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "label-studio-sdk>=2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8"]

@@ -1,0 +1,7 @@
+# uv workspace for Maestro's Python packages. scheduler/ is a separate uv
+# project with its own lock until its redesign (PLAN.md).
+[tool.uv.workspace]
+members = ["common", "trainer", "cli"]
+
+[tool.pytest.ini_options]
+testpaths = ["common/tests"]
