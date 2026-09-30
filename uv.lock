@@ -2036,33 +2036,39 @@ name = "maestro-common"
 version = "0.1.0"
 source = { editable = "common" }
 dependencies = [
-    { name = "label-studio-sdk" },
     { name = "numpy" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
 
 [package.optional-dependencies]
+ls = [
+    { name = "label-studio-sdk" },
+]
 sim = [
     { name = "matplotlib" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "label-studio-sdk" },
     { name = "pytest" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "label-studio-sdk", specifier = ">=2.0" },
+    { name = "label-studio-sdk", marker = "extra == 'ls'", specifier = ">=2.0" },
     { name = "matplotlib", marker = "extra == 'sim'", specifier = ">=3.8" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "scipy", specifier = ">=1.11" },
 ]
-provides-extras = ["sim"]
+provides-extras = ["ls", "sim"]
 
 [package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8" }]
+dev = [
+    { name = "label-studio-sdk", specifier = ">=2.0" },
+    { name = "pytest", specifier = ">=8" },
+]
 
 [[package]]
 name = "maestro-trainer"
