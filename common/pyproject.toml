@@ -10,6 +10,12 @@ dependencies = [
     "label-studio-sdk>=2.0",
 ]
 
+[project.optional-dependencies]
+sim = ["matplotlib>=3.8"]
+
+[project.scripts]
+maestro-sim = "maestro_common.sim_cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

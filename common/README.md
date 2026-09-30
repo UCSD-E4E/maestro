@@ -10,5 +10,6 @@ Shared code for the scheduler, trainers and tools (see [PLAN.md](../PLAN.md)):
 | `bandit` | Beta posteriors, Thompson sampling, reshaping factor r, discounting, atomic save/load |
 | `arms` | Arm names and `model_version` strings (`<family>+<strategy>@<round>`) |
 | `strategies` | Uncertainty, coreset and random ranking; audit tasks; Label Studio queue scores |
+| `sim`, `sim_cli` | Offline bandit simulator on synthetic learning curves (`maestro-sim`, needs the `sim` extra for plots) |
 
 Run the tests from the repo root with `uv run pytest`.
