@@ -5,11 +5,11 @@ Shared code for the scheduler, trainers and tools (see [PLAN.md](../PLAN.md)):
 | Module | What it does |
 | --- | --- |
 | `instances` | `Instance`: a boolean mask, a confidence and a label |
-| `ls_brush` | Instances to and from Label Studio BrushLabels results (brush RLE) |
+| `ls_brush` | Instances to and from Label Studio BrushLabels results (brush RLE); needs the `ls` extra |
 | `reward` | Per-image IoU reward: Hungarian matching of predicted and annotated instances |
 | `bandit` | Beta posteriors, Thompson sampling, reshaping factor r, discounting, atomic save/load |
 | `arms` | Arm names and `model_version` strings (`<family>+<strategy>@<round>`) |
-| `strategies` | Uncertainty, coreset and random ranking; audit tasks; Label Studio queue scores |
+| `strategies` | Uncertainty (max and sum), coreset and random ranking; audit tasks; Label Studio queue scores |
 | `sim`, `sim_cli` | Offline bandit simulator on synthetic learning curves (`maestro-sim`, needs the `sim` extra for plots) |
 
 Run the tests from the repo root with `uv run pytest`.

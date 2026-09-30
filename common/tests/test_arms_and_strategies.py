@@ -77,3 +77,16 @@ def test_queue_scores_serve_queue_first_in_order():
     assert served[:2] == queue
     assert set(served) == set("abcdef")
     assert all(0 <= s < 1 for s in scores.values())
+
+
+def test_uncertainty_sum_counts_expected_ambiguous_instances():
+    from maestro_common.strategies import uncertainty_sum
+
+    m = np.zeros((2, 2), bool)
+    many = [Instance(m, 0.5)] * 4 + [Instance(m, 0.99)]
+    one = [Instance(m, 0.5)]
+    assert uncertainty_sum(many) == pytest.approx(4.02)
+    assert uncertainty_sum(one) == pytest.approx(1.0)
+    assert uncertainty_sum([]) == 0.0
+    # Unlike the max, the sum still separates frames that both have a 0.5 candidate.
+    assert uncertainty_sum(many) > uncertainty_sum(one)

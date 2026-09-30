@@ -33,6 +33,16 @@ def uncertainty_value(instances: list[Instance]) -> float:
     return max((instance_uncertainty(inst.score) for inst in instances), default=0.0)
 
 
+def uncertainty_sum(instances: list[Instance]) -> float:
+    """Expected number of ambiguous instances: the sum of per-candidate uncertainty.
+
+    The max saturates once frames have many candidates (most have one near
+    0.5); the sum keeps separating them. It favors crowded frames, so callers
+    with a labeling budget should cap per-frame cost.
+    """
+    return float(sum(instance_uncertainty(inst.score) for inst in instances))
+
+
 def rank_uncertainty(task_ids: Sequence[Hashable], predictions: dict[Hashable, list[Instance]]) -> list:
     values = {tid: uncertainty_value(predictions.get(tid, [])) for tid in task_ids}
     return sorted(task_ids, key=lambda tid: -values[tid])
