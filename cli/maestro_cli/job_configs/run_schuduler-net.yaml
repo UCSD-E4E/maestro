@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: test-svc
+    group: maestro
+  name: test-svc
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000 # Send sockets through http port issue?
+  selector:
+    k8s-app: test-schuduler
+  type: ClusterIP
