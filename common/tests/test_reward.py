@@ -61,3 +61,29 @@ def test_score_is_order_independent():
     preds = [Instance(rng.random((H, W)) > 0.5) for _ in range(4)]
     gts = [Instance(rng.random((H, W)) > 0.5) for _ in range(3)]
     assert image_iou(preds, gts, 0.0) == pytest.approx(image_iou(preds[::-1], gts[::-1], 0.0))
+
+
+def labeled(inst, label):
+    return Instance(inst.mask, inst.score, label)
+
+
+def test_class_aware_matching_rejects_wrong_class():
+    fish = labeled(box(0, 0, 10, 10), "fish")
+    model = labeled(box(0, 0, 10, 10), "fish model")
+    assert image_iou([model], [fish], class_aware=True) == 0.0
+    assert image_iou([model], [fish]) == pytest.approx(1.0)  # class-agnostic by default
+
+
+def test_class_aware_matching_pairs_within_each_class():
+    gts = [labeled(box(0, 0, 10, 10), "fish"), labeled(box(0, 12, 10, 22), "fish model")]
+    preds = [labeled(box(0, 12, 10, 22), "fish model"), labeled(box(0, 0, 10, 10), "fish")]
+    assert sorted((p, g) for p, g, _ in match(preds, gts, class_aware=True)) == [(0, 1), (1, 0)]
+    assert image_iou(preds, gts, class_aware=True) == pytest.approx(1.0)
+
+
+def test_class_aware_prefers_same_class_over_higher_iou():
+    # The "fish model" prediction overlaps the fish best, but may only match the model.
+    gts = [labeled(box(0, 0, 10, 10), "fish"), labeled(box(0, 2, 10, 12), "fish model")]
+    preds = [labeled(box(0, 0, 10, 10), "fish model")]
+    ((p, g, iou),) = match(preds, gts, class_aware=True)
+    assert (p, g) == (0, 1) and iou == pytest.approx(80 / 120)

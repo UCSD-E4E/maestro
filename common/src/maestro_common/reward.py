@@ -8,7 +8,9 @@ contribute 0, so the score is
     sum of matched IoUs / max(#predictions, #annotations)
 
 which lies in [0, 1]. An image with nothing predicted and nothing annotated
-scores 1. Matching is class-agnostic: v1 has a single "fish" class (PLAN.md).
+scores 1. Matching is class-agnostic by default; with ``class_aware=True`` an
+instance only matches one with the same label (e.g. FishSense's ``fish`` vs
+``fish model``), and a wrong-class prediction counts as unmatched.
 """
 
 from __future__ import annotations
@@ -36,12 +38,17 @@ def match(
     predictions: list[Instance],
     annotations: list[Instance],
     match_threshold: float = MATCH_THRESHOLD,
+    *,
+    class_aware: bool = False,
 ) -> list[tuple[int, int, float]]:
     """One-to-one matches as (prediction index, annotation index, IoU)."""
     if not predictions or not annotations:
         return []
     shape = annotations[0].mask.shape
     ious = iou_matrix(stack_masks(predictions, shape), stack_masks(annotations, shape))
+    if class_aware:
+        same = np.array([[p.label == a.label for a in annotations] for p in predictions])
+        ious = np.where(same, ious, 0.0)
     rows, cols = linear_sum_assignment(ious, maximize=True)
     return [(r, c, float(ious[r, c])) for r, c in zip(rows, cols) if ious[r, c] >= match_threshold]
 
@@ -50,9 +57,12 @@ def image_iou(
     predictions: list[Instance],
     annotations: list[Instance],
     match_threshold: float = MATCH_THRESHOLD,
+    *,
+    class_aware: bool = False,
 ) -> float:
     """The per-image reward in [0, 1] described in the module docstring."""
     denominator = max(len(predictions), len(annotations))
     if denominator == 0:
         return 1.0
-    return sum(iou for _, _, iou in match(predictions, annotations, match_threshold)) / denominator
+    matches = match(predictions, annotations, match_threshold, class_aware=class_aware)
+    return sum(iou for _, _, iou in matches) / denominator
