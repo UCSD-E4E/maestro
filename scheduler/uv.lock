@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.9"
 resolution-markers = [
     "python_full_version >= '4'",
@@ -925,16 +925,16 @@ wheels = [
 
 [[package]]
 name = "eventlet"
-version = "0.36.1"
+version = "0.40.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dnspython", version = "2.7.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "dnspython", version = "2.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "greenlet" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1b/df/f441947eef23192c9f179e46868ee8510a6f7b6627b76b88f07692f9c706/eventlet-0.36.1.tar.gz", hash = "sha256:d227fe76a63d9e6a6cef53beb8ad0b2dc40a5e7737c801f4b474cfae1db07bc5", size = 552863, upload-time = "2024-03-29T13:41:19.952Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/4f/1e5227b23aa77d9ea05056b98cf0bf187cca994991060245002b640f9830/eventlet-0.40.3.tar.gz", hash = "sha256:290852db0065d78cec17a821b78c8a51cafb820a792796a354592ae4d5fceeb0", size = 565741, upload-time = "2025-08-27T09:56:16.085Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/75/af/73efcf654d8875febc6599f5a3d1eed043c1ca34a9b12950208cbf710d2a/eventlet-0.36.1-py3-none-any.whl", hash = "sha256:e42d0f73b718e654c223a033b8692d1a94d778a6c1deb6c3d21442746f3f727f", size = 360472, upload-time = "2024-03-29T13:41:17.444Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/b4/981362608131dc4ee8de9fdca6a38ef19e3da66ab6a13937bd158882db91/eventlet-0.40.3-py3-none-any.whl", hash = "sha256:e681cae6ee956cfb066a966b5c0541e734cc14879bda6058024104790595ac9d", size = 364333, upload-time = "2025-08-27T09:56:10.774Z" },
 ]
 
 [[package]]
@@ -1687,7 +1687,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "eventlet", specifier = ">=0.36.1,<0.37" },
+    { name = "eventlet", specifier = ">=0.36.1,<0.41" },
     { name = "greenlet", specifier = "==3.0.*" },
     { name = "kubernetes", specifier = ">=30.1.0,<31" },
     { name = "label-studio-ml", git = "https://github.com/UCSD-E4E/label-studio-ml-backend?branch=poetry" },
